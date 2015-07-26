@@ -58,6 +58,7 @@ public class PopChooser extends Dialog implements View.OnClickListener {
         getWindow().setGravity(Gravity.BOTTOM);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        getWindow().getAttributes().windowAnimations = R.style.PopChooserAnimation;
     }
 
     @Override
@@ -133,7 +134,6 @@ public class PopChooser extends Dialog implements View.OnClickListener {
 
                     @Override
                     public View getView(int i, View view, ViewGroup viewGroup) {
-                        if (view != null) return view;
                         View root = LayoutInflater.from(context).inflate(R.layout.item, viewGroup, false);
                         ((TextView) root.findViewById(R.id.center)).setText(placeResonseModel.getPlaces().get(i).getName());
                         root.setOnClickListener(PopChooser.this);
