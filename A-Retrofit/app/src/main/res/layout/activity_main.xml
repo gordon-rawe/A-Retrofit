@@ -16,4 +16,11 @@
         android:layout_alignParentTop="true"
         android:background="#111111" />
 
+    <View
+        android:id="@+id/bottom_btn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:background="#111111" />
 </RelativeLayout>
