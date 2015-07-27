@@ -4,27 +4,36 @@ package com.example.gordon.a_retrofit;
  * Created by gordon on 2015/7/26.
  */
 public class LocationEntity {
-    private String cityName;
-    private String placeName;
+    private String privince;
+    private String city;
+    private String county;
 
-    public String getCityName() {
-        return cityName;
+    public String getProvince() {
+        return privince;
     }
 
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
+    public void setPrivince(String privince) {
+        this.privince = privince;
     }
 
-    public String getPlaceName() {
-        return placeName;
+    public String getCity() {
+        return city;
     }
 
-    public void setPlaceName(String placeName) {
-        this.placeName = placeName;
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCounty() {
+        return county;
+    }
+
+    public void setCounty(String county) {
+        this.county = county;
     }
 
     @Override
     public String toString() {
-        return getCityName() + " " + getPlaceName();
+        return getProvince() + " " + getCity() + " " + getCounty();
     }
 }

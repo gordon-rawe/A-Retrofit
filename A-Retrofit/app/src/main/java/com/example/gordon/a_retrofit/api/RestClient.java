@@ -11,7 +11,7 @@ import retrofit.converter.GsonConverter;
  * Created by gordon on 2015/7/25.
  */
 public class RestClient {
-    private static String BASE_URL = "http://192.168.0.112:1128";
+    private static String BASE_URL = "http://gordonrawe.duapp.com/landscape";
     private static RestClient ourInstance = new RestClient();
     private CityServiceInterface cityApiService;
 

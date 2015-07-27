@@ -4,13 +4,13 @@ package com.example.gordon.a_retrofit.request;
  * Created by gordon on 7/24/15.
  */
 public class CityRequestModel {
-    private String cityName;
+    private String province;
 
-    public String getCityName() {
-        return cityName;
+    public String getProvince() {
+        return province;
     }
 
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
+    public void setProvince(String province) {
+        this.province = province;
     }
 }

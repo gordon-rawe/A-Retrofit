@@ -18,8 +18,9 @@ import android.widget.TextView;
 import com.example.gordon.a_retrofit.LocationEntity;
 import com.example.gordon.a_retrofit.R;
 import com.example.gordon.a_retrofit.api.RestClient;
-import com.example.gordon.a_retrofit.response.CityResponseModel;
-import com.example.gordon.a_retrofit.response.PlaceResonseModel;
+import com.example.gordon.a_retrofit.response.CityResonseModel;
+import com.example.gordon.a_retrofit.response.CountyResponseModel;
+import com.example.gordon.a_retrofit.response.ProvinceResponseModel;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -69,19 +70,23 @@ public class PopChooser extends Dialog implements View.OnClickListener {
                 level1Job();
                 break;
             case LEVEL2:
-                level2Job(locationEntity.getCityName());
+                level2Job(locationEntity.getProvince());
+                break;
+            case LEVEL3:
+                level3Job(locationEntity.getProvince(),locationEntity.getCity());
                 break;
         }
     }
 
     private void level1Job() {
-        RestClient.getInstance().getCityApiService().getCities(new Callback<CityResponseModel>() {
+        ((TextView)findViewById(R.id.tv)).setText("请选择省份");
+        RestClient.getInstance().getCityApiService().getProvinces(new Callback<ProvinceResponseModel>() {
             @Override
-            public void success(final CityResponseModel cityResponseModel, Response response) {
+            public void success(final ProvinceResponseModel provinceResponseModel, Response response) {
                 ((ListView) findViewById(R.id.lv)).setAdapter(new BaseAdapter() {
                     @Override
                     public int getCount() {
-                        return cityResponseModel.getCities().size();
+                        return provinceResponseModel.getProvinces().size();
                     }
 
                     @Override
@@ -96,9 +101,8 @@ public class PopChooser extends Dialog implements View.OnClickListener {
 
                     @Override
                     public View getView(int i, View view, ViewGroup viewGroup) {
-                        if (view != null) return view;
                         View root = LayoutInflater.from(context).inflate(R.layout.item, viewGroup, false);
-                        ((TextView) root.findViewById(R.id.center)).setText(cityResponseModel.getCities().get(i));
+                        ((TextView) root.findViewById(R.id.center)).setText(provinceResponseModel.getProvinces().get(i));
                         root.setOnClickListener(PopChooser.this);
                         return root;
                     }
@@ -112,14 +116,15 @@ public class PopChooser extends Dialog implements View.OnClickListener {
         });
     }
 
-    private void level2Job(String cityName) {
-        RestClient.getInstance().getCityApiService().getCityPlaces(cityName, new Callback<PlaceResonseModel>() {
+    private void level2Job(String province) {
+        ((TextView)findViewById(R.id.tv)).setText("请选择城市");
+        RestClient.getInstance().getCityApiService().getCities(province, new Callback<CityResonseModel>() {
             @Override
-            public void success(final PlaceResonseModel placeResonseModel, Response response) {
+            public void success(final CityResonseModel cityResonseModel, Response response) {
                 ((ListView) findViewById(R.id.lv)).setAdapter(new BaseAdapter() {
                     @Override
                     public int getCount() {
-                        return placeResonseModel.getPlaces().size();
+                        return cityResonseModel.getCities().size();
                     }
 
                     @Override
@@ -135,7 +140,45 @@ public class PopChooser extends Dialog implements View.OnClickListener {
                     @Override
                     public View getView(int i, View view, ViewGroup viewGroup) {
                         View root = LayoutInflater.from(context).inflate(R.layout.item, viewGroup, false);
-                        ((TextView) root.findViewById(R.id.center)).setText(placeResonseModel.getPlaces().get(i).getName());
+                        ((TextView) root.findViewById(R.id.center)).setText(cityResonseModel.getCities().get(i));
+                        root.setOnClickListener(PopChooser.this);
+                        return root;
+                    }
+                });
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
+    private void level3Job(String province,String city) {
+        ((TextView)findViewById(R.id.tv)).setText("请选择县份");
+        RestClient.getInstance().getCityApiService().getCounties(province, city, new Callback<CountyResponseModel>() {
+            @Override
+            public void success(final CountyResponseModel countyResponseModel, Response response) {
+                ((ListView) findViewById(R.id.lv)).setAdapter(new BaseAdapter() {
+                    @Override
+                    public int getCount() {
+                        return countyResponseModel.getCounties().size();
+                    }
+
+                    @Override
+                    public Object getItem(int i) {
+                        return null;
+                    }
+
+                    @Override
+                    public long getItemId(int i) {
+                        return i;
+                    }
+
+                    @Override
+                    public View getView(int i, View view, ViewGroup viewGroup) {
+                        View root = LayoutInflater.from(context).inflate(R.layout.item, viewGroup, false);
+                        ((TextView) root.findViewById(R.id.center)).setText(countyResponseModel.getCounties().get(i));
                         root.setOnClickListener(PopChooser.this);
                         return root;
                     }
@@ -153,18 +196,23 @@ public class PopChooser extends Dialog implements View.OnClickListener {
     public void onClick(View view) {
         dismiss();
         if (this.level == PopMenuLevel.LEVEL1) {
-            this.locationEntity.setCityName(((TextView) view.findViewById(R.id.center)).getText().toString());
+            this.locationEntity.setPrivince(((TextView) view.findViewById(R.id.center)).getText().toString());
             new PopChooser(context, PopMenuLevel.LEVEL2, this.locationEntity).setListener(listener).show();
         }
         if (this.level == PopMenuLevel.LEVEL2){
-            this.locationEntity.setPlaceName(((TextView) view.findViewById(R.id.center)).getText().toString());
+            this.locationEntity.setCity(((TextView) view.findViewById(R.id.center)).getText().toString());
+            new PopChooser(context, PopMenuLevel.LEVEL3, this.locationEntity).setListener(listener).show();
+        }
+        if (this.level == PopMenuLevel.LEVEL3){
+            this.locationEntity.setCounty(((TextView) view.findViewById(R.id.center)).getText().toString());
             if(listener!=null) listener.finish(locationEntity);
         }
     }
 
     public enum PopMenuLevel {
         LEVEL1,
-        LEVEL2
+        LEVEL2,
+        LEVEL3
     }
 
     public interface PopChooserListener{

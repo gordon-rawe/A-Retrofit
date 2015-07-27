@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.gordon.a_retrofit.api.RestClient;
-import com.example.gordon.a_retrofit.response.CityResponseModel;
-import com.example.gordon.a_retrofit.response.PlaceResonseModel;
+import com.example.gordon.a_retrofit.response.CityResonseModel;
+import com.example.gordon.a_retrofit.response.ProvinceResponseModel;
 import com.example.gordon.a_retrofit.ui.PopChooser;
 
 import retrofit.Callback;
@@ -32,9 +32,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.center_btn:
-                RestClient.getInstance().getCityApiService().getCities(new Callback<CityResponseModel>() {
+                RestClient.getInstance().getCityApiService().getProvinces(new Callback<ProvinceResponseModel>() {
                     @Override
-                    public void success(CityResponseModel cityResponseModel, Response response) {
+                    public void success(ProvinceResponseModel cityResponseModel, Response response) {
                         Toast.makeText(getApplicationContext(),cityResponseModel.toString(),Toast.LENGTH_SHORT).show();
                     }
 
@@ -45,10 +45,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 });
                 break;
             case R.id.top_btn:
-                RestClient.getInstance().getCityApiService().getCityPlaces("shanghai", new Callback<PlaceResonseModel>() {
+                RestClient.getInstance().getCityApiService().getCities("上海市", new Callback<CityResonseModel>() {
                     @Override
-                    public void success(PlaceResonseModel placeResonseModel, Response response) {
-                        Toast.makeText(getApplicationContext(),placeResonseModel.toString(),Toast.LENGTH_SHORT).show();
+                    public void success(CityResonseModel cityResonseModel, Response response) {
+                        Toast.makeText(getApplicationContext(), cityResonseModel.toString(),Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
